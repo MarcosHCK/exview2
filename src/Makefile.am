@@ -54,7 +54,7 @@ check-local: $(desktop_DATA)
 
 bin_PROGRAMS=exview2
 exview2_SOURCES=\
-	ev2_main.c \
+	ev2_application.c \
 	ev2_window.vala \
 	$(VOID)
 
@@ -73,6 +73,7 @@ exview2_LDFLAGS=\
 	$(GTK_LIBS) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
+	resources/libbundle.la \
 	$(VOID)
 
 #
@@ -88,6 +89,13 @@ VALA_PKG=\
 
 AM_VALAFLAGS=\
 	--vapidir=../vapi/ \
-	#--gresources="resources/scp_resources.gresources.xml"
+	--gresources="resources/ev_resources.gresources.xml" \
 	$(addprefix --pkg , ${VALA_PKG}) \
 	$(VOID)
+
+#
+# Sub-directories
+#
+
+SUBDIRS=\
+	resources

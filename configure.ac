@@ -20,7 +20,7 @@ m4_define([p_VERSION], m4_esyscmd([printf `sed -e 's/^#define VERSION "\([^"]*\)
 m4_define([p_RELEASE], m4_esyscmd([printf `sed -e 's/^#define RELEASE "\([^"]*\)"/\1/p' -e d < ./version.h`]))
 
 AC_INIT([exview2], [p_VERSION], [exview.bugs@hcktm.com], [exview], [https://www.hcktm.com/exview2/])
-AC_CONFIG_SRCDIR([src/ev2_main.c])
+AC_CONFIG_SRCDIR([src/ev2_application.c])
 AC_LANG([C])
 
 #
@@ -154,6 +154,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
+src/resources/Makefile
 vapi/Makefile
 po/Makefile.in
 ])

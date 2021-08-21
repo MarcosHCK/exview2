@@ -24,3 +24,5 @@
 *.Tpo
 
 exview2
+
+ev2_window.c

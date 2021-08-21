@@ -15,14 +15,4 @@
 # along with exview2. If not, see <http://www.gnu.org/licenses/>.
 #
 
-*.header
-*.mo
-*.sed
-*.sin
-
-Makefile.in
-Makefile.in.in
-Makevars
-POTFILES
-Rules-quot
-exview.pot
+*.ui~
