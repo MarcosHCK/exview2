@@ -68,7 +68,7 @@ namespace Ev
             else
             {
               GLib.File files[] = {file,};
-              app.open(files, null);
+              app.open(files, "open");
             }
           }
         }
@@ -79,7 +79,7 @@ namespace Ev
     }
 
     [GtkCallback]
-    private void on_treeview1_cursor_changed(Gtk.TreeView treeview)
+    private void on_cursor_changed(Gtk.TreeView treeview)
     {
       Gtk.TreeModel model = treeview.get_model();
       if(model != null)
@@ -121,6 +121,9 @@ namespace Ev
 
     public void open(GLib.File file, GLib.Cancellable? cancellable = null) throws GLib.Error
     {
+      var stream = file.read(cancellable);
+      
+
       headerbar1.set_subtitle(file.peek_path());
       loaded = true;
     }

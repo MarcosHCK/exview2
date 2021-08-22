@@ -55,6 +55,7 @@ check-local: $(desktop_DATA)
 bin_PROGRAMS=exview2
 exview2_SOURCES=\
 	ev2_application.c \
+	ev2_context.vala \
 	ev2_window.vala \
 	$(VOID)
 
