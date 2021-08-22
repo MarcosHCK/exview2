@@ -25,5 +25,6 @@
 
 exview2
 
+ev2_message.c
 ev2_view_context.c
 ev2_window.c

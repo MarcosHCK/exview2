@@ -54,6 +54,7 @@ check-local: $(desktop_DATA)
 
 EXTRA_DIST+=\
 	ev2_application.h \
+	ev2_message.h \
 	ev2_module.h \
 	ev2_module_manager.h \
 	ev2_parser.h \
@@ -68,6 +69,7 @@ EXTRA_DIST+=\
 bin_PROGRAMS=exview2
 exview2_SOURCES=\
 	ev2_application.c \
+	ev2_message.vala \
 	ev2_module.c \
 	ev2_module_manager.c \
 	ev2_parser.c \

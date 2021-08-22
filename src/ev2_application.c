@@ -17,6 +17,7 @@
  */
 #include <config.h>
 #include <ev2_application.h>
+#include <ev2_message.h>
 #include <ev2_module_manager.h>
 #include <ev2_parser.h>
 #include <resources/ev_resources.h>
@@ -101,9 +102,11 @@ void ev_application_class_open(GApplication* pself, GFile** files, gint n_files,
     ev_window_open(window, files[i], NULL, &tmp_err);
     if G_UNLIKELY(tmp_err != NULL)
     {
-      g_critical(tmp_err->message);
-      g_error_free(tmp_err);
-      g_assert_not_reached();
+      EvMessage* message =
+      ev_message_new_error_with_gerror(tmp_err);
+      gtk_window_set_application(GTK_WINDOW(message), GTK_APPLICATION(pself));
+      gtk_dialog_run(GTK_DIALOG(message));
+      gtk_widget_destroy(GTK_WIDGET(message));
     }
   }
 }

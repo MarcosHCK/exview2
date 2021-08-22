@@ -38,6 +38,7 @@ RES_RESOURCES=\
 	$(VOID)
 
 UI_RESOURCES=\
+	ui/message.ui \
 	ui/window.ui \
 	$(VOID)
 

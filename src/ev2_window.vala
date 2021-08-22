@@ -61,8 +61,10 @@ namespace Ev
                 this.open(file, null);
               } catch(GLib.Error e)
               {
-                critical(e.message);
-                assert_not_reached();
+                var message = new Ev.Message.error_with_gerror(e);
+                ((Gtk.Window)message).set_application(this.application);
+                ((Gtk.Dialog)message).run();
+                ((Gtk.Widget)message).destroy();
               }
             }
             else
@@ -121,12 +123,18 @@ namespace Ev
 
     public void open(GLib.File file, GLib.Cancellable? cancellable = null) throws GLib.Error
     {
+      GLib.InputStream stream = null;
+      Ev.ViewContext context = null;
 /*
  * Gather arguments
  *
  */
-      var stream = file.read(cancellable);
-      var context = new Ev.ViewContext();
+      try {
+        stream = file.read(cancellable);
+        context = new Ev.ViewContext();
+      } catch(GLib.Error e) {
+        throw e;
+      }
 
       Ev.Application app = (Ev.Application) ((Gtk.Window) this).get_application();
       Ev.Parser manager = (Ev.Parser) app.get_module_manager();
@@ -135,8 +143,12 @@ namespace Ev
  * Make the call
  *
  */
-      manager.parse(context, stream, cancellable);
-      context.show(treeview1);
+      try {
+        manager.parse(context, stream, cancellable);
+        context.show(treeview1);
+      } catch(GLib.Error e) {
+        throw e;
+      }
 
 /*
  * Update headerbar and load status
