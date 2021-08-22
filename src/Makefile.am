@@ -56,6 +56,8 @@ bin_PROGRAMS=exview2
 exview2_SOURCES=\
 	ev2_application.c \
 	ev2_context.vala \
+	ev2_module.c \
+	ev2_module_manager.c \
 	ev2_window.vala \
 	$(VOID)
 
@@ -63,6 +65,7 @@ exview2_CFLAGS=\
 	$(GTK_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	$(GMODULE_CFLAGS) \
 	-DLOCALEDIR=\"${localedir}\" \
 	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
 	-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" \
@@ -74,6 +77,7 @@ exview2_LDFLAGS=\
 	$(GTK_LIBS) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
 	resources/libbundle.la \
 	$(VOID)
 

@@ -15,6 +15,7 @@
  *  along with exview2.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#include <config.h>
 #include <ev2_application.h>
 #include <resources/ev_resources.h>
 

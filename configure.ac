@@ -146,6 +146,7 @@ fi
 PKG_CHECK_MODULES([GTK], [gtk+-3.0])
 PKG_CHECK_MODULES([GIO], [gio-2.0])
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
+PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 
 #
 # Prepare output
