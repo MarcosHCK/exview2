@@ -41,6 +41,9 @@ struct _EvApplicationClass
   GtkApplicationClass parent_class;
 };
 
+gpointer
+ev_application_get_module_manager(EvApplication* application);
+
 #if __cplusplus
 }
 #endif // __cplusplus

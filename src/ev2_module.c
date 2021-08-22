@@ -17,11 +17,15 @@
  */
 #include <config.h>
 #include <ev2_module.h>
+#include <ev2_parser.h>
 
 typedef union _GTypesArray GTypesArray;
 
 G_DEFINE_QUARK(ev-module-error-quark,
                ev_module_error);
+
+static
+void ev_parser_iface_init(EvParserIface* iface);
 
 /**
  * SECTION: ev2_module
@@ -66,10 +70,68 @@ enum {
 static
 GParamSpec* properties[prop_number] = {0};
 
-G_DEFINE_TYPE
+G_DEFINE_TYPE_WITH_CODE
 (EvModule,
  ev_module,
- G_TYPE_OBJECT);
+ G_TYPE_OBJECT,
+ G_IMPLEMENT_INTERFACE
+ (EV_TYPE_PARSER,
+  ev_parser_iface_init));
+
+static
+gboolean ev_parser_iface_parse(EvParser* pself, EvViewContext* view_ctx, GInputStream* stream, GCancellable* cancellable, GError** error) {
+  g_return_val_if_fail(G_IS_SEEKABLE(stream), FALSE);
+  EvModule* self = EV_MODULE(pself);
+  GError* tmp_err = NULL;
+
+  goffset start =
+  g_seekable_tell(G_SEEKABLE(stream));
+  guint i;
+
+  for(i = 0;i < self->g_types->len;i++)
+  {
+    GType g_type = self->g_types->g_types[i];
+    EvParser* parser = g_object_new(g_type, NULL);
+
+    ev_parser_parse(parser, view_ctx, stream, cancellable, &tmp_err);
+    if G_LIKELY(tmp_err != NULL)
+    {
+      g_object_unref(parser);
+
+      if G_LIKELY
+      (tmp_err->domain != EV_PARSER_ERROR
+       || tmp_err->code != EV_PARSER_ERROR_UNPARSEABLE)
+      {
+        g_propagate_error(error, tmp_err);
+        return FALSE;
+      }
+
+      g_clear_error(&tmp_err);
+
+      g_seekable_seek
+      (G_SEEKABLE(stream),
+       start,
+       G_SEEK_SET,
+       cancellable,
+       &tmp_err);
+      if G_UNLIKELY(tmp_err != NULL)
+      {
+        g_propagate_error(error, tmp_err);
+        return FALSE;
+      }
+    }
+    else
+    {
+      return TRUE;
+    }
+  }
+return FALSE;
+}
+
+static
+void ev_parser_iface_init(EvParserIface* iface) {
+  iface->parse = ev_parser_iface_parse;
+}
 
 static
 void ev_module_class_get_property(GObject* pself, guint prop_id, GValue* value, GParamSpec* pspec) {

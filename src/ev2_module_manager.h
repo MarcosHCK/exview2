@@ -32,6 +32,10 @@
  * @EV_MODULE_MANAGER_ERROR_FAILED: generic error condition.
  * @EV_MODULE_MANAGER_ERROR_OPEN_ERROR: error occurred at module
  * load, specifically at #g_module_open() function.
+ * @EV_MODULE_MANAGER_ERROR_UNDEFINED_INIT: initialization function
+ * is not defined by loaded module.
+ * @EV_MODULE_MANAGER_ERROR_UNKNOWN_FORMAT: there are not modules capable
+ * of parse given input.
  *
  * Error code returned by #EvModuleManager API functions.
  * Note that %EV_MODULE_MANAGER_ERROR_FAILED is here only for compatibility with
@@ -41,6 +45,7 @@ typedef enum {
   EV_MODULE_MANAGER_ERROR_FAILED,
   EV_MODULE_MANAGER_ERROR_OPEN_ERROR,
   EV_MODULE_MANAGER_ERROR_UNDEFINED_INIT,
+  EV_MODULE_MANAGER_ERROR_UNKNOWN_FORMAT,
 } EvModuleManagerError;
 
 #define EV_TYPE_MODULE_MANAGER            (ev_module_manager_get_type())
@@ -67,6 +72,9 @@ struct _EvModuleManagerClass
   GObjectClass parent_class;
 };
 
+EvModuleManager*
+ev_module_manager_new(GCancellable* cancellable,
+                      GError** error);
 void
 ev_module_manager_load(EvModuleManager* manager,
                        GFile* filename,

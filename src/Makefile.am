@@ -49,15 +49,29 @@ check-local: $(desktop_DATA)
 #	$(desktop_DATA)
 
 #
+# Header files
+#
+
+EXTRA_DIST+=\
+	ev2_application.h \
+	ev2_module.h \
+	ev2_module_manager.h \
+	ev2_parser.h \
+	ev2_view_context.h \
+	$(VOID)
+
+
+#
 # Binaries and libraries
 #
 
 bin_PROGRAMS=exview2
 exview2_SOURCES=\
 	ev2_application.c \
-	ev2_context.vala \
 	ev2_module.c \
 	ev2_module_manager.c \
+	ev2_parser.c \
+	ev2_view_context.vala \
 	ev2_window.vala \
 	$(VOID)
 
@@ -90,6 +104,7 @@ VALA_PKG=\
 	gio-2.0 \
 	glib-2.0 \
 	config \
+	exview2 \
 	$(VOID)
 
 AM_VALAFLAGS=\

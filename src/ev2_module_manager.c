@@ -18,6 +18,7 @@
 #include <config.h>
 #include <ev2_module.h>
 #include <ev2_module_manager.h>
+#include <ev2_parser.h>
 #include <gmodule.h>
 
 G_DEFINE_QUARK(ev-module-manager-error-quark,
@@ -26,6 +27,16 @@ G_DEFINE_QUARK(ev-module-manager-error-quark,
 typedef union  _EvPathArray   EvPathArray;
 typedef struct _EvModuleEntry EvModuleEntry;
 typedef union  _EvModuleArray EvModuleArray;
+
+static
+void g_initable_iface_init(GInitableIface* iface);
+static
+void ev_parser_iface_init(EvParserIface* iface);
+static
+void _ev_module_manager_load(EvModuleManager* manager,
+                             const gchar* filename,
+                             GCancellable* cancellable,
+                             GError** error);
 
 /*
  * Object definition
@@ -53,7 +64,12 @@ struct _EvModuleManager
     {
       struct _EvModuleEntry
       {
-        EvModule* module;
+        union
+        {
+          EvModule* module;
+          EvParser* parser;
+        };
+
         GModule* handle;
       } *modules;
       guint len;
@@ -61,10 +77,100 @@ struct _EvModuleManager
   } *modules;
 };
 
-G_DEFINE_TYPE
+G_DEFINE_TYPE_WITH_CODE
 (EvModuleManager,
  ev_module_manager,
- G_TYPE_OBJECT);
+ G_TYPE_OBJECT,
+ G_IMPLEMENT_INTERFACE
+ (G_TYPE_INITABLE,
+  g_initable_iface_init)
+ G_IMPLEMENT_INTERFACE
+ (EV_TYPE_PARSER,
+  ev_parser_iface_init));
+
+static
+gboolean g_initable_iface_init_sync(GInitable* pself, GCancellable* cancellable, GError** error) {
+  GError* tmp_err = NULL;
+  _ev_module_manager_load(EV_MODULE_MANAGER(pself), NULL, cancellable, &tmp_err);
+  if G_UNLIKELY(tmp_err != NULL)
+  {
+    if G_UNLIKELY
+    (tmp_err->domain != EV_MODULE_MANAGER_ERROR
+     || tmp_err->code != EV_MODULE_MANAGER_ERROR_UNDEFINED_INIT)
+    {
+      g_propagate_error(error, tmp_err);
+      return FALSE;
+    }
+
+    g_error_free(tmp_err);
+  }
+return TRUE;
+}
+
+static
+void g_initable_iface_init(GInitableIface* iface) {
+  iface->init = g_initable_iface_init_sync;
+}
+
+static
+gboolean ev_parser_iface_parse(EvParser* pself, EvViewContext* view_ctx, GInputStream* stream, GCancellable* cancellable, GError** error) {
+  g_return_val_if_fail(G_IS_SEEKABLE(stream), FALSE);
+  EvModuleManager* self = EV_MODULE_MANAGER(pself);
+  GError* tmp_err = NULL;
+
+  goffset start =
+  g_seekable_tell(G_SEEKABLE(stream));
+  guint i;
+
+  for(i = 0;i < self->modules->len;i++)
+  {
+    EvParser* parser = self->modules->modules[i].parser;
+    ev_parser_parse(parser, view_ctx, stream, cancellable, &tmp_err);
+    if G_LIKELY(tmp_err != NULL)
+    {
+      g_object_unref(parser);
+
+      if G_LIKELY
+      (tmp_err->domain != EV_PARSER_ERROR
+       || tmp_err->code != EV_PARSER_ERROR_UNPARSEABLE)
+      {
+        g_propagate_error(error, tmp_err);
+        return FALSE;
+      }
+
+      g_clear_error(&tmp_err);
+
+      g_seekable_seek
+      (G_SEEKABLE(stream),
+       start,
+       G_SEEK_SET,
+       cancellable,
+       &tmp_err);
+      if G_UNLIKELY(tmp_err != NULL)
+      {
+        g_propagate_error(error, tmp_err);
+        return FALSE;
+      }
+    }
+    else
+    {
+      return TRUE;
+    }
+  }
+
+  g_set_error
+  (error,
+   EV_MODULE_MANAGER_ERROR,
+   EV_MODULE_MANAGER_ERROR_UNKNOWN_FORMAT,
+   "Unknown format\r\n");
+return FALSE;
+}
+
+static
+void ev_parser_iface_init(EvParserIface* iface) {
+  iface->parse = ev_parser_iface_parse;
+}
+
 
 static
 void ev_module_manager_class_finalize(GObject* pself) {
@@ -136,8 +242,15 @@ void ev_module_manager_init(EvModuleManager* self) {
  */
 
 EvModuleManager*
-ev_module_manager_new() {
-return g_object_new(EV_TYPE_MODULE_MANAGER, NULL);
+ev_module_manager_new(GCancellable* cancellable,
+                      GError** error)
+{
+  return
+  g_initable_new
+  (EV_TYPE_MODULE_MANAGER,
+   cancellable,
+   error,
+   NULL);
 }
 
 void
@@ -147,7 +260,7 @@ ev_module_manager_add_path(EvModuleManager* manager,
   g_return_if_fail(EV_IS_MODULE_MANAGER(manager));
   g_return_if_fail(path != NULL);
 
-  GFile* path_ = g_file_new_for_path(path_);
+  GFile* path_ = g_file_new_for_path(path);
   g_ptr_array_add(&(manager->paths->array_), path_);
 }
 
@@ -167,19 +280,15 @@ already_loaded(EvModuleManager* manager, GModule* handle) {
 return FALSE;
 }
 
-void
-ev_module_manager_load(EvModuleManager* manager,
-                       GFile* filename,
-                       GCancellable* cancellable,
-                       GError** error)
+static void
+_ev_module_manager_load(EvModuleManager* manager,
+                        const gchar* filename,
+                        GCancellable* cancellable,
+                        GError** error)
 {
-  g_return_if_fail(EV_IS_MODULE_MANAGER(manager));
-  g_return_if_fail(G_IS_FILE(filename));
-  g_return_if_fail(error == NULL || *error == NULL);
-
   GModule* handle =
   g_module_open
-  (g_file_peek_path(filename),
+  (filename,
    G_MODULE_BIND_LAZY);
 
   if G_UNLIKELY(handle == NULL)
@@ -188,7 +297,7 @@ ev_module_manager_load(EvModuleManager* manager,
     (error,
      EV_MODULE_MANAGER_ERROR,
      EV_MODULE_MANAGER_ERROR_OPEN_ERROR,
-     "error at module load '%s'\r\n",
+     "error at module load: %s\r\n",
      g_module_error());
     _g_module_close0(handle);
     return;
@@ -201,13 +310,16 @@ ev_module_manager_load(EvModuleManager* manager,
   }
 
   EvModuleInitFunc init = NULL;
-  if(g_module_symbol(handle, G_STRINGIFY(EV_MODULE_INIT_FUNCTION), &init) == FALSE)
+  if(g_module_symbol
+     (handle,
+      G_STRINGIFY(EV_MODULE_INIT_FUNCTION),
+      (gpointer*) &init) == FALSE)
   {
     g_set_error
     (error,
      EV_MODULE_MANAGER_ERROR,
      EV_MODULE_MANAGER_ERROR_UNDEFINED_INIT,
-     "module has not an init function '%s'\r\n",
+     "error initializing module: %s\r\n",
      g_module_error());
     _g_module_close0(handle);
     return;
@@ -236,6 +348,23 @@ ev_module_manager_load(EvModuleManager* manager,
   g_array_append_vals
   (&(manager->modules->array_),
    &entry, 1);
+}
+
+void
+ev_module_manager_load(EvModuleManager* manager,
+                       GFile* filename,
+                       GCancellable* cancellable,
+                       GError** error)
+{
+  g_return_if_fail(EV_IS_MODULE_MANAGER(manager));
+  g_return_if_fail(G_IS_FILE(filename));
+  g_return_if_fail(error == NULL || *error == NULL);
+
+  _ev_module_manager_load
+  (manager,
+   g_file_peek_path(filename),
+   cancellable,
+   error);
 }
 
 void

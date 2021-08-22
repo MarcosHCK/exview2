@@ -54,6 +54,11 @@ namespace Ev
         warning("Attempt to ascend over base\r\n");
     }
 
+    public void show(Gtk.TreeView treeview)
+    {
+      treeview.model = (Gtk.TreeModel) categories;
+    }
+
     public ViewContext()
     {
       Object();

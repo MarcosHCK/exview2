@@ -25,5 +25,5 @@
 
 exview2
 
-ev2_context.c
+ev2_view_context.c
 ev2_window.c

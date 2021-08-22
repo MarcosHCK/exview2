@@ -121,9 +121,27 @@ namespace Ev
 
     public void open(GLib.File file, GLib.Cancellable? cancellable = null) throws GLib.Error
     {
+/*
+ * Gather arguments
+ *
+ */
       var stream = file.read(cancellable);
-      
+      var context = new Ev.ViewContext();
 
+      Ev.Application app = (Ev.Application) ((Gtk.Window) this).get_application();
+      Ev.Parser manager = (Ev.Parser) app.get_module_manager();
+
+/*
+ * Make the call
+ *
+ */
+      manager.parse(context, stream, cancellable);
+      context.show(treeview1);
+
+/*
+ * Update headerbar and load status
+ *
+ */
       headerbar1.set_subtitle(file.peek_path());
       loaded = true;
     }
