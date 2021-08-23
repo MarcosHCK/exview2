@@ -131,7 +131,7 @@ namespace Ev
  */
       try {
         stream = file.read(cancellable);
-        context = new Ev.ViewContext();
+        context = new Ev.ViewContext(2, GLib.Type.STRING, GLib.Type.OBJECT, GLib.Type.NONE);
       } catch(GLib.Error e) {
         throw e;
       }
@@ -145,15 +145,15 @@ namespace Ev
  */
       try {
         manager.parse(context, stream, cancellable);
-        context.show(treeview1);
       } catch(GLib.Error e) {
         throw e;
       }
 
 /*
- * Update headerbar and load status
+ * Update GUI and load status
  *
  */
+      treeview1.model = context.get_store();
       headerbar1.set_subtitle(file.peek_path());
       loaded = true;
     }

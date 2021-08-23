@@ -23,25 +23,46 @@ namespace Ev
     private Gtk.TreeStore categories = null;
     private GLib.Queue<Gtk.TreeIter?> iters = null;
 
-    public void append(string name, Gtk.TreeStore contents)
+    [CCode (sentinel = "-1")]
+    public void append(...)
+    {
+      var l = va_list();
+      this.appendv(l);
+    }
+
+    public void appendv(va_list l)
     {
       Gtk.TreeIter iter;
       categories.append(out iter, iters.peek_head());
-      categories.@set(iter, 0, name, 1, (GLib.Object) contents);
+      categories.set_valist(iter, l);
     }
 
-    public void prepend(string name, Gtk.TreeStore contents)
+    [CCode (sentinel = "-1")]
+    public void prepend(...)
+    {
+      var l = va_list();
+      this.prependv(l);
+    }
+
+    public void prependv(va_list l)
     {
       Gtk.TreeIter iter;
       categories.prepend(out iter, iters.peek_head());
-      categories.@set(iter, 0, name, 1, (GLib.Object) contents);
+      categories.set_valist(iter, l);
     }
 
-    public void descend(string name)
+    [CCode (sentinel = "-1")]
+    public void descend(...)
+    {
+      var l = va_list();
+      this.descendv(l);
+    }
+
+    public void descendv(va_list l)
     {
       Gtk.TreeIter iter;
       categories.append(out iter, iters.peek_head());
-      categories.@set(iter, 0, name);
+      categories.set_valist(iter, l);
       iters.push_head(iter);
     }
 
@@ -54,25 +75,22 @@ namespace Ev
         warning("Attempt to ascend over base\r\n");
     }
 
-    public void show(Gtk.TreeView treeview)
+    public Gtk.TreeModel get_store()
     {
-      treeview.model = (Gtk.TreeModel) categories;
+      return (Gtk.TreeModel) this.categories;
     }
 
-    public ViewContext()
+    [CCode (sentinel = "G_TYPE_NONE")]
+    public ViewContext(int n_columns, ...)
     {
       Object();
+      var l = va_list();
 
 /*
  * Categories store
  *
  */
-      this.categories =
-      new Gtk.TreeStore
-      (2,
-       GLib.Type.STRING,
-       GLib.Type.OBJECT,
-       GLib.Type.NONE);
+      this.categories = Ev.new_categories_valist(n_columns, l);
 
 /*
  * Subcategories iterator
@@ -84,7 +102,8 @@ namespace Ev
       this.iters.push_head(null);
     }
 
-    public ViewContext.ascending(Ev.ViewContext parent, string name)
+    [CCode (sentinel = "-1")]
+    public ViewContext.ascending(Ev.ViewContext parent, ...)
     {
       Object();
 
@@ -97,12 +116,18 @@ namespace Ev
       this.categories = parent.categories;
 
 /*
+ * Arguments
+ * 
+ */
+      var l = va_list();
+
+/*
  * Append 
  *
  */
       Gtk.TreeIter iter;
       parent.categories.append(out iter, iters.peek_head());
-      parent.categories.@set(iter, 0, name);
+      parent.categories.set_valist(iter, l);
       this.iters.push_head(iter);
     }
   }

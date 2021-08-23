@@ -17,7 +17,6 @@
  */
 #ifndef __EV2_PARSER_INCLUDED__
 #define __EV2_PARSER_INCLUDED__ 1
-#include <ev2_view_context.h>
 #include <gio/gio.h>
 
 /**
@@ -50,6 +49,10 @@ typedef enum {
 
 typedef struct _EvParser      EvParser;
 typedef struct _EvParserIface EvParserIface;
+
+#ifndef __EV2_VIEW_CONTEXT_INCLUDED__
+typedef struct _EvViewContext EvViewContext;
+#endif // __EV2_VIEW_CONTEXT_INCLUDED__
 
 #if __cplusplus
 extern "C" {

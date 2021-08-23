@@ -15,21 +15,20 @@
  *  along with exview2. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#include <config.h>
+#include <ev2_view_context_patch.h>
 
-namespace Ev
+GtkTreeStore*
+ev_view_context_new_categories_valist(int n_columns,
+                                      va_list l)
 {
-  [CCode (cheader_filename = "ev2_application.h")]
-  public class Application : Gtk.Application
-  {
-    public unowned Ev.Parser get_module_manager();
-  }
+  g_assert(sizeof(GType) * n_columns < 1024);
+  GType* g_types = g_alloca(sizeof(GType) * n_columns);
+  gint i;
 
-  [CCode (cheader_filename = "ev2_parser.h")]
-  public interface Parser : GLib.Object
-  {
-    public virtual bool parse(Ev.ViewContext view_ctx, GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
-  }
+  for(i = 0;i < n_columns;i++)
+    g_types[i] = va_arg(l, GType);
 
-  [CCode (cheader_filename = "ev2_view_context_patch.h", cname = "ev_view_context_new_categories_valist")]
-  public Gtk.TreeStore new_categories_valist(int n_columns, va_list l);
+  return
+  gtk_tree_store_newv(n_columns, g_types);
 }

@@ -15,21 +15,20 @@
  *  along with exview2. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef __EV2_VIEW_CONTEXT_PATCH_INCLUDED__
+#define __EV2_VIEW_CONTEXT_PATCH_INCLUDED__
+#include <gtk/gtk.h>
 
-namespace Ev
-{
-  [CCode (cheader_filename = "ev2_application.h")]
-  public class Application : Gtk.Application
-  {
-    public unowned Ev.Parser get_module_manager();
-  }
+#if __cplusplus
+extern "C" {
+#endif // __cplusplus
 
-  [CCode (cheader_filename = "ev2_parser.h")]
-  public interface Parser : GLib.Object
-  {
-    public virtual bool parse(Ev.ViewContext view_ctx, GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
-  }
+GtkTreeStore*
+ev_view_context_new_categories_valist(int n_columns,
+                                      va_list l);
 
-  [CCode (cheader_filename = "ev2_view_context_patch.h", cname = "ev_view_context_new_categories_valist")]
-  public Gtk.TreeStore new_categories_valist(int n_columns, va_list l);
+#if __cplusplus
 }
+#endif // __cplusplus
+
+#endif // __EV2_VIEW_CONTEXT_PATCH_INCLUDED__
