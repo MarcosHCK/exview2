@@ -19,7 +19,7 @@
 #include <ev2_application.h>
 #include <ev2_message.h>
 #include <ev2_module_manager.h>
-#include <ev2_parser.h>
+#include <ev2_settings.h>
 #include <resources/ev_resources.h>
 
 typedef struct _EvWindow EvWindow;
@@ -42,6 +42,7 @@ struct _EvApplication {
 
   /*<private>*/
   EvModuleManager* manager;
+  EvSettings* settings;
 };
 
 static
@@ -120,6 +121,7 @@ void ev_application_class_dispose(GObject* pself) {
  *
  */
   g_clear_object(&(self->manager));
+  g_clear_object(&(self->settings));
 
 /*
  * Chain-up
@@ -174,8 +176,18 @@ int main(int argc, char* argv[]) {
    NULL);
 
   GError* tmp_err = NULL;
+
   ((EvApplication*)app)->manager =
   ev_module_manager_new(NULL, &tmp_err);
+  if G_UNLIKELY(tmp_err != NULL)
+  {
+    g_critical(tmp_err->message);
+    g_error_free(tmp_err);
+    g_assert_not_reached();
+  }
+
+  ((EvApplication*)app)->settings =
+  ev_settings_new(NULL, &tmp_err);
   if G_UNLIKELY(tmp_err != NULL)
   {
     g_critical(tmp_err->message);

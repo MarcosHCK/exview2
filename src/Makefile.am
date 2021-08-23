@@ -15,6 +15,9 @@
 # along with exview2. If not, see <http://www.gnu.org/licenses/>.
 #
 
+# Keep sync with settings/Makefile.am
+schemasdir=${pkgdatadir}/schemas/
+
 #
 # Some variables
 #
@@ -58,6 +61,7 @@ EXTRA_DIST+=\
 	ev2_module.h \
 	ev2_module_manager.h \
 	ev2_parser.h \
+	ev2_settings.h \
 	ev2_view_context.h \
 	$(VOID)
 
@@ -73,6 +77,7 @@ exview2_SOURCES=\
 	ev2_module.c \
 	ev2_module_manager.c \
 	ev2_parser.c \
+	ev2_settings.vala \
 	ev2_view_context.vala \
 	ev2_window.vala \
 	$(VOID)
@@ -82,11 +87,13 @@ exview2_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
-	-DLOCALEDIR=\"${localedir}\" \
-	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
-	-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" \
 	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
 	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}\" \
+	-DPKGLIBDIR=\"${pkglibdir}\" \
+	-DLOCALEDIR=\"${localedir}\" \
+	-DSCHEMASDIR=\"${schemasdir}\" \
+	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
+	-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" \
 	$(VOID)
 
 exview2_LDFLAGS=\

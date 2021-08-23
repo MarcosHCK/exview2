@@ -156,6 +156,7 @@ AC_CONFIG_FILES([
 Makefile
 src/Makefile
 src/resources/Makefile
+settings/Makefile
 vapi/Makefile
 po/Makefile.in
 ])
