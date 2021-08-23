@@ -152,7 +152,6 @@ static
 void ev_application_init(EvApplication* self) {
   g_application_add_main_option_entries
   (G_APPLICATION(self), opts);
-  g_type_ensure(EV_TYPE_SETTINGS_CONNECTOR);
 }
 
 /*
@@ -198,6 +197,18 @@ int main(int argc, char* argv[]) {
     g_error_free(tmp_err);
     g_assert_not_reached();
   }
+
+  GdkPixbuf* pixbuf =
+  gdk_pixbuf_new_from_resource(GRESNAME "/res/exview2.svg", &tmp_err);
+  if G_UNLIKELY(tmp_err != NULL)
+  {
+    g_critical(tmp_err->message);
+    g_error_free(tmp_err);
+    g_assert_not_reached();
+  }
+
+  gtk_window_set_default_icon(pixbuf);
+  g_object_unref(pixbuf);
 
   ((EvApplication*)app)->connector =
   ev_settings_connector_new();
