@@ -20,6 +20,7 @@
 #include <ev2_message.h>
 #include <ev2_module_manager.h>
 #include <ev2_settings.h>
+#include <ev2_settings_connector.h>
 #include <resources/ev_resources.h>
 
 typedef struct _EvWindow EvWindow;
@@ -149,6 +150,7 @@ static
 void ev_application_init(EvApplication* self) {
   g_application_add_main_option_entries
   (G_APPLICATION(self), opts);
+  g_type_ensure(EV_TYPE_SETTINGS_CONNECTOR);
 }
 
 /*

@@ -12,12 +12,12 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with exview2.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with exview2. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #ifndef __EV2_SETTINGS_INCLUDED__
 #define __EV2_SETTINGS_INCLUDED__
-#include <glib-object.h>
+#include <gio/gio.h>
 
 #define EV_TYPE_SETTINGS            (ev_settings_get_type ())
 #define EV_SETTINGS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_SETTINGS, EvSettings))
@@ -42,6 +42,10 @@ ev_settings_new (GCancellable* cancellable,
 GSettings*
 ev_settings_get_settings (EvSettings* self,
                           const gchar* schema_id);
+gboolean
+ev_settings_has_key (EvSettings* self,
+                     const gchar* schema_id,
+                     const gchar* key);
 
 #if __cplusplus
 }

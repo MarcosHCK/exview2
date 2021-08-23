@@ -70,6 +70,7 @@ EXTRA_DIST+=\
 	ev2_module_manager.h \
 	ev2_parser.h \
 	ev2_settings.h \
+	ev2_settings_connector.h \
 	ev2_view_context.h \
 	ev2_view_context_patch.h \
 	$(VOID)
@@ -88,6 +89,7 @@ exview2_SOURCES=\
 	ev2_module_self.c \
 	ev2_parser.c \
 	ev2_settings.vala \
+	ev2_settings_connector.c \
 	ev2_view_context.vala \
 	ev2_view_context_patch.c \
 	ev2_window.vala \

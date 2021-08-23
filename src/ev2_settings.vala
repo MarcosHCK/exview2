@@ -47,7 +47,7 @@ namespace Ev
     return true;
     }
 
-    public GLib.Settings? get_settings(string schema_id)
+    private GLib.SettingsSchema? get_schema(string schema_id)
     {
       var schema = schemas.lookup(schema_id);
       if(unlikely(schema == null))
@@ -57,9 +57,24 @@ namespace Ev
           return null;
 
         schemas.insert(schema_id, schema);
-        return this.get_settings(schema_id);
       }
+    return schema;
+    }
+
+    public GLib.Settings? get_settings(string schema_id)
+    {
+      var schema = this.get_schema(schema_id);
+      if(unlikely(schema == null))
+        return null;
     return new GLib.Settings.full(schema, null, null);
+    }
+
+    public bool has_key(string schema_id, string key)
+    {
+      var schema = this.get_schema(schema_id);
+      if(unlikely(schema == null))
+        return false;
+    return schema.has_key(key);
     }
 
     public Settings(GLib.Cancellable? cancellable = null) throws GLib.Error
