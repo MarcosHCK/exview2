@@ -26,7 +26,7 @@ namespace Ev
   }
 
   [GtkTemplate (ui = "/org/hck/exview2/ui/preferences.ui")]
-  public class Preferences : Gtk.Dialog, GLib.Initable
+  public class Preferences : Gtk.Window, GLib.Initable
   {
     [GtkChild]
     private Gtk.Box box1;
@@ -68,7 +68,7 @@ namespace Ev
 
     private bool init(GLib.Cancellable? cancellable = null) throws GLib.Error
     {
-      var app = (Ev.Application) ((Gtk.Window) this).get_application();
+      var app = (Ev.Application) GLib.Application.get_default();
       var manager = (Ev.ModuleManager) app.get_module_manager();
       var snippets = manager.list_snippets();
 

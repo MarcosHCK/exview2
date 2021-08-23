@@ -28,7 +28,7 @@ Author: MarcosHCK
   <!-- interface-description Exview2 preferences UI snippet -->
   <!-- interface-copyright 2021-2022 MarcosHCK -->
   <!-- interface-authors MarcosHCK -->
-  <object class="ExviewSettingsConnector">
+  <object class="EvSettingsConnector">
     <connection schema="org.hck.exview2" key="automatic-tree-expand" object="checkbutton1" property="active"/>
   </object>
   <object class="GtkFrame" id="toplevel">

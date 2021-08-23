@@ -28,11 +28,63 @@ Author: MarcosHCK
   <!-- interface-description EvWindow -->
   <!-- interface-copyright 2021-2022 MarcosHCK -->
   <!-- interface-authors MarcosHCK -->
+  <object class="GtkPopover" id="popover1">
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">5</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="text" translatable="yes">Preferences</property>
+            <signal name="clicked" handler="on_preferences" object="EvWindow" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="text" translatable="yes">About Exview2</property>
+            <signal name="clicked" handler="on_about" object="EvWindow" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <template class="EvWindow" parent="GtkWindow">
     <property name="can-focus">False</property>
     <property name="default-width">800</property>
     <property name="default-height">600</property>
-    <signal name="delete-event" handler="on_delete_event" swapped="no"/>
     <child>
       <object class="GtkPaned">
         <property name="visible">True</property>
@@ -49,6 +101,9 @@ Author: MarcosHCK
                 <property name="can-focus">True</property>
                 <property name="headers-visible">False</property>
                 <signal name="cursor-changed" handler="on_cursor_changed" object="EvWindow" swapped="no"/>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
                 <child>
                   <object class="GtkTreeViewColumn">
                     <property name="title" translatable="yes">column</property>
@@ -78,6 +133,9 @@ Author: MarcosHCK
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="headers-visible">False</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
                 <child>
                   <object class="GtkTreeViewColumn">
                     <property name="title" translatable="yes">column</property>
@@ -132,10 +190,30 @@ Author: MarcosHCK
               <object class="GtkImage">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="icon-name">document-open</property>
+                <property name="icon-name">document-open-symbolic</property>
               </object>
             </child>
           </object>
+        </child>
+        <child>
+          <object class="GtkMenuButton">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">True</property>
+            <property name="popover">popover1</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
     </child>
