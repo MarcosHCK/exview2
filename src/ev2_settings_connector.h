@@ -67,6 +67,9 @@ struct _EvSettingsConnectorClass
   GObjectClass parent_class;
 };
 
+EvSettingsConnector*
+ev_settings_connector_new();
+
 #if __cplusplus
 }
 #endif // __cplusplus

@@ -44,6 +44,7 @@ struct _EvApplication {
   /*<private>*/
   EvModuleManager* manager;
   EvSettings* settings;
+  EvSettingsConnector* connector;
 };
 
 static
@@ -123,6 +124,7 @@ void ev_application_class_dispose(GObject* pself) {
  */
   g_clear_object(&(self->manager));
   g_clear_object(&(self->settings));
+  g_clear_object(&(self->connector));
 
 /*
  * Chain-up
@@ -196,6 +198,14 @@ int main(int argc, char* argv[]) {
     g_error_free(tmp_err);
     g_assert_not_reached();
   }
+
+  ((EvApplication*)app)->connector =
+  ev_settings_connector_new();
+  g_object_set
+  (((EvApplication*)app)->connector,
+   "settings-source",
+   ((EvApplication*)app)->settings,
+   NULL);
 
   g_resources_register(ev_resources_get_resource());
 

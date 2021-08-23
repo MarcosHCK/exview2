@@ -308,6 +308,9 @@ void ev_settings_connector_class_set_property(GObject* pself, guint prop_id, con
   EvSettingsConnector* self = EV_SETTINGS_CONNECTOR(pself);
   switch(prop_id)
   {
+  case prop_source:
+    g_set_object(&(self->source), g_value_get_object(value));
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID(pself, prop_id, pspec);
     break;
@@ -362,4 +365,14 @@ void ev_settings_connector_class_init(EvSettingsConnectorClass* klass) {
 
 static
 void ev_settings_connector_init(EvSettingsConnector* self) {
+}
+
+/*
+ * Object methods
+ *
+ */
+
+EvSettingsConnector*
+ev_settings_connector_new() {
+  return g_object_new(EV_TYPE_SETTINGS_CONNECTOR, NULL);
 }
