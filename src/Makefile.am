@@ -103,6 +103,7 @@ exview2_LDFLAGS=\
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
 	resources/libbundle.la \
+	../modules/elf/libelf_module.la \
 	$(VOID)
 
 #

@@ -14,14 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with exview2. If not, see <http://www.gnu.org/licenses/>.
 #
-ACLOCAL_AMFLAGS=-I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS=\
-	modules \
-	settings \
-	vapi \
-	src \
-	po
-
-EXTRA_DIST=\
-	config.rpath
+*.[ao]
+*.la
+*.lai
+*.lo
+*.Po
+*.Plo
+*.Tpo
