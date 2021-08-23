@@ -154,10 +154,10 @@ PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 Makefile
-modules/Makefile
-modules/elf/Makefile
 settings/Makefile
 vapi/Makefile
+src/modules/Makefile
+src/modules/elf/Makefile
 src/resources/Makefile
 src/Makefile
 po/Makefile.in

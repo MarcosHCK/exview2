@@ -34,7 +34,7 @@ VOID=
 
 INCLUDE_PATH=\
 	-I${top_builddir}/src/ \
-	-I${top_builddir}/modules/ \
+	-I${top_builddir}/src/modules/ \
 	$(VOID)
 
 #

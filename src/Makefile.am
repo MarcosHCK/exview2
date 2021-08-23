@@ -19,6 +19,14 @@
 schemasdir=${pkgdatadir}/schemas/
 
 #
+# Sub-directories
+#
+
+SUBDIRS=\
+	modules \
+	resources
+
+#
 # Some variables
 #
 
@@ -104,8 +112,11 @@ exview2_LDFLAGS=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GMODULE_LIBS) \
+	$(VOID)
+
+exview2_LDADD=\
+	modules/elf/libelf_module.la \
 	resources/libbundle.la \
-	../modules/elf/libelf_module.la \
 	$(VOID)
 
 #
@@ -125,10 +136,3 @@ AM_VALAFLAGS=\
 	--gresources="resources/ev_resources.gresources.xml" \
 	$(addprefix --pkg , ${VALA_PKG}) \
 	$(VOID)
-
-#
-# Sub-directories
-#
-
-SUBDIRS=\
-	resources
