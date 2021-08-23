@@ -169,8 +169,23 @@ return application->manager;
  * Entry
  *
  */
+#include <glib/gi18n.h>
 
 int main(int argc, char* argv[]) {
+/*
+ * Gettext
+ *
+ */
+  setlocale(LC_ALL, "");
+  bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+  bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+  textdomain(GETTEXT_PACKAGE);
+
+/*
+ * Create application
+ * object
+ *
+ */
   GApplication* app =
   g_object_new
   (EV_TYPE_APPLICATION,
@@ -180,6 +195,11 @@ int main(int argc, char* argv[]) {
 
   GError* tmp_err = NULL;
 
+/*
+ * Initialize failable
+ * variables
+ *
+ */
   ((EvApplication*)app)->manager =
   ev_module_manager_new(NULL, &tmp_err);
   if G_UNLIKELY(tmp_err != NULL)
@@ -218,8 +238,17 @@ int main(int argc, char* argv[]) {
    ((EvApplication*)app)->settings,
    NULL);
 
+/*
+ * Ensure resources are compiled
+ * along with binary
+ *
+ */
   g_resources_register(ev_resources_get_resource());
 
+/*
+ * Run application
+ *
+ */
   int status = g_application_run(app, argc, argv);
   while(G_IS_OBJECT(app))
     g_object_unref(app);

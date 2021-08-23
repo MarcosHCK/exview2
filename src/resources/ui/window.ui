@@ -21,7 +21,7 @@ along with exview2.  If not, see <http://www.gnu.org/licenses/>.
 Author: MarcosHCK
 
 -->
-<interface domain="en_US">
+<interface domain="exview2">
   <requires lib="gtk+" version="3.24"/>
   <!-- interface-license-type gplv3 -->
   <!-- interface-name exview2 -->

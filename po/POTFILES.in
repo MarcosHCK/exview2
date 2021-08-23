@@ -1,2 +1,7 @@
 # List of source files which contain translatable strings.
+src/resources/ui/message.ui
+src/resources/ui/prefblock.ui
+src/resources/ui/preferences.ui
+src/resources/ui/window.ui
+src/ev2_message.c
 src/ev2_window.c

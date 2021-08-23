@@ -15,6 +15,7 @@
 # along with exview2. If not, see <http://www.gnu.org/licenses/>.
 #
 
+*.gmo
 *.header
 *.mo
 *.sed
@@ -25,4 +26,4 @@ Makefile.in.in
 Makevars
 POTFILES
 Rules-quot
-exview.pot
+exview2.pot

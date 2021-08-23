@@ -19,7 +19,7 @@ AC_PREREQ([2.69])
 m4_define([p_VERSION], m4_esyscmd([printf `sed -e 's/^#define VERSION "\([^"]*\)"/\1/p' -e d < ./version.h`]))
 m4_define([p_RELEASE], m4_esyscmd([printf `sed -e 's/^#define RELEASE "\([^"]*\)"/\1/p' -e d < ./version.h`]))
 
-AC_INIT([exview2], [p_VERSION], [exview.bugs@hcktm.com], [exview], [https://www.hcktm.com/exview2/])
+AC_INIT([exview2], [p_VERSION], [exview2.bugs@hcktm.com], [exview2], [https://www.hcktm.com/exview2/])
 AC_CONFIG_SRCDIR([src/ev2_application.c])
 AC_LANG([C])
 
