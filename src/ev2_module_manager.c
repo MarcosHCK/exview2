@@ -130,7 +130,7 @@ gboolean ev_parser_iface_parse(EvParser* pself, EvViewContext* view_ctx, GInputS
     {
       g_object_unref(parser);
 
-      if G_LIKELY
+      if G_UNLIKELY
       (tmp_err->domain != EV_PARSER_ERROR
        || tmp_err->code != EV_PARSER_ERROR_UNPARSEABLE)
       {
