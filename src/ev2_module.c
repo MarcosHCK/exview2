@@ -270,8 +270,9 @@ ev_module_set_snippet(EvModule* module,
   g_return_if_fail(snippet != NULL);
 
   if G_LIKELY
-  (module->snippet != snippet
-   && g_bytes_compare(module->snippet, snippet) != 0)
+  (module->snippet == NULL
+   || module->snippet != snippet
+   || g_bytes_compare(module->snippet, snippet) != 0)
   {
     g_clear_pointer(&(module->snippet), g_bytes_unref);
     module->snippet = g_bytes_ref(snippet);
