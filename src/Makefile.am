@@ -76,6 +76,7 @@ exview2_SOURCES=\
 	ev2_message.vala \
 	ev2_module.c \
 	ev2_module_manager.c \
+	ev2_module_self.c \
 	ev2_parser.c \
 	ev2_settings.vala \
 	ev2_view_context.vala \
