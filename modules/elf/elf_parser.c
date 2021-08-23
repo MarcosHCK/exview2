@@ -18,6 +18,7 @@
 #include <config.h>
 #include <elf_parser.h>
 #include <ev2_parser.h>
+#include <ev2_view_context.h>
 
 static
 void ev_parser_iface_init(EvParserIface* iface);
