@@ -24,7 +24,8 @@ schemasdir=${pkgdatadir}/schemas/
 
 SUBDIRS=\
 	modules \
-	resources
+	resources \
+	application
 
 #
 # Some variables
@@ -39,25 +40,6 @@ PACKAGE_VERSION_BUILD=@PACKAGE_VERSION_BUILD@
 
 EXTRA_DIST=
 VOID=
-
-#
-# Desktop files
-#
-#desktopdir = $(datadir)/applications
-#desktop_in_files = org.hck.deusexmakina.desktop.in
-#desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-
-#@INTLTOOL_DESKTOP_RULE@
-
-check-local: $(desktop_DATA)
-	@list=$(desktop_DATA); test -n "$(desktopdir)" || list=; \
-	for file in $$list; do \
-		echo $(DESKTOP_FILE_VALIDATE) "$$file";\
-		$(DESKTOP_FILE_VALIDATE) "$$file"; \
-	done
-
-#CLEANFILES=\
-#	$(desktop_DATA)
 
 #
 # Header files

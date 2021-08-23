@@ -1,0 +1,12 @@
+[Desktop Entry]
+_Name=Exview2
+_GenericName=Extended viewer
+_Comment=Inspect all kind of files
+_Keywords=GTK;binary;debug;executable;viewer;
+Version=@PACKAGE_VERSION@
+Exec=exview2 %F
+Terminal=false
+Type=Application
+Icon=org.hck.exview2
+Categories=GNOME;GTK;Development;
+StartupNotify=true
