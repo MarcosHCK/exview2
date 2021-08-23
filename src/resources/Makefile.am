@@ -40,6 +40,7 @@ RES_RESOURCES=\
 UI_RESOURCES=\
 	ui/message.ui \
 	ui/prefblock.ui \
+	ui/preferences.ui \
 	ui/window.ui \
 	$(VOID)
 

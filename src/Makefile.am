@@ -88,6 +88,7 @@ exview2_SOURCES=\
 	ev2_module_manager.c \
 	ev2_module_self.c \
 	ev2_parser.c \
+	ev2_preferences.vala \
 	ev2_settings.vala \
 	ev2_settings_connector.c \
 	ev2_view_context.vala \

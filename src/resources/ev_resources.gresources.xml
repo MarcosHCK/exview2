@@ -28,6 +28,7 @@ Author: MarcosHCK
 -->
     <file preprocess="xml-stripblanks">ui/message.ui</file>
     <file preprocess="xml-stripblanks">ui/prefblock.ui</file>
+    <file preprocess="xml-stripblanks">ui/preferences.ui</file>
     <file preprocess="xml-stripblanks">ui/window.ui</file>
 
 <!--

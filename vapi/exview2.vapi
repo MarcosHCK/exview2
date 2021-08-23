@@ -18,16 +18,22 @@
 
 namespace Ev
 {
-  [CCode (cheader_filename = "ev2_application.h")]
-  public class Application : Gtk.Application
-  {
-    public unowned Ev.Parser get_module_manager();
-  }
-
   [CCode (cheader_filename = "ev2_parser.h")]
   public interface Parser : GLib.Object
   {
     public virtual bool parse(Ev.ViewContext view_ctx, GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
+  }
+
+  [CCode (cheader_filename = "ev2_module_manager.h")]
+  public class ModuleManager : GLib.Object
+  {
+    public GLib.Bytes[] list_snippets();
+  }
+
+  [CCode (cheader_filename = "ev2_application.h")]
+  public class Application : Gtk.Application
+  {
+    public unowned ModuleManager get_module_manager();
   }
 
   [CCode (cheader_filename = "ev2_view_context_patch.h", cname = "ev_view_context_new_categories_valist")]

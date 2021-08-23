@@ -84,6 +84,9 @@ void
 ev_module_manager_load_all(EvModuleManager* manager,
                            GCancellable* cancellable,
                            GError** error);
+GBytes**
+ev_module_manager_list_snippets(EvModuleManager* manager,
+                                gint* n_snippets);
 
 #if __cplusplus
 }

@@ -442,3 +442,44 @@ ev_module_manager_load_all(EvModuleManager* manager,
 _error_:
 return;
 }
+
+static
+void _g_bytes_unref0(gpointer var) {
+  (var == NULL) ? NULL : (var = (g_bytes_unref (var), NULL));
+}
+
+GBytes**
+ev_module_manager_list_snippets(EvModuleManager* manager,
+                                gint* n_snippets)
+{
+  g_return_val_if_fail(EV_IS_MODULE_MANAGER(manager), NULL);
+
+  GPtrArray* snippets =
+  g_ptr_array_new_full
+  (manager->modules->len,
+   (GDestroyNotify)
+   _g_bytes_unref0);
+  GBytes* snippet = NULL;
+
+  guint i;
+  for(i = 0;i < manager->modules->len;i++)
+  {
+    g_object_get
+    (manager->modules->modules[i].module,
+     "snippet", &snippet,
+     NULL);
+
+    if(snippet != NULL)
+      g_ptr_array_add
+      (snippets,
+       snippet);
+  }
+
+  if G_LIKELY(n_snippets)
+    (*n_snippets) = snippets->len;
+
+  return (GBytes**)
+  g_ptr_array_free
+  (snippets,
+   FALSE);
+}

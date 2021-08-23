@@ -136,8 +136,8 @@ namespace Ev
         throw e;
       }
 
-      Ev.Application app = (Ev.Application) ((Gtk.Window) this).get_application();
-      Ev.Parser manager = (Ev.Parser) app.get_module_manager();
+      var app = (Ev.Application) ((Gtk.Window) this).get_application();
+      var manager = (Ev.Parser) (Ev.ModuleManager) app.get_module_manager();
 
 /*
  * Make the call
