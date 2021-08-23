@@ -29,6 +29,15 @@ EXTRA_DIST=
 VOID=
 
 #
+# Include paths
+#
+
+INCLUDE_PATH=\
+	-I${top_builddir}/src/ \
+	-I${top_builddir}/modules/ \
+	$(VOID)
+
+#
 # Unlisted C headers
 #
 
@@ -48,7 +57,7 @@ libelf_module_la_SOURCES=\
 libelf_module_la_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
-	-I../../src/
+	$(INCLUDE_PATH) \
 	$(VOID)
 libelf_module_la_LIBADD=\
 	$(GIO_LIBS) \

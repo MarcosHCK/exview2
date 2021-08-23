@@ -15,5 +15,8 @@
 # along with exview2. If not, see <http://www.gnu.org/licenses/>.
 #
 
+EXTRA_DIST=\
+	ev2_macros.h
+
 SUBDIRS=\
 	elf

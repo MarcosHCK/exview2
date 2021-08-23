@@ -16,7 +16,9 @@
  *
  */
 #ifndef __ELF_PARSER_INCLUDED__
-#define __ELF_PARSER_INCLUDED__
+#define __ELF_PARSER_INCLUDED__ 1
+#include <ev2_macros.h>
+#include <elf_structs.h>
 #include <glib-object.h>
 
 #define EV_TYPE_ELF_PARSER            (ev_elf_parser_get_type())
@@ -35,6 +37,20 @@ extern "C" {
 
 GType
 ev_elf_parser_get_type();
+
+struct _EvElfParser
+{
+  GObject parent_instance;
+
+  /*<private>*/
+  union
+  {
+    elf_header32_t header32_;
+    elf_header64_t header64_;
+    gchar header_b;
+  };
+};
+
 
 struct _EvElfParserClass
 {

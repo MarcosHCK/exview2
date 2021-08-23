@@ -22,7 +22,8 @@
  * Statically linked modules
  *
  */
-#include <modules/elf/elf_parser.h>
+GType
+ev_elf_parser_get_type();
 
 G_MODULE_EXPORT
 gboolean EV_MODULE_INIT_FUNCTION (EvModule       *module,
@@ -49,6 +50,6 @@ gboolean EV_MODULE_INIT_FUNCTION (EvModule       *module,
   ev_module_set_snippet(module, snippet);
   g_bytes_unref(snippet);
 
-  ev_module_add_parser(module, EV_TYPE_ELF_PARSER);
+  ev_module_add_parser(module, ev_elf_parser_get_type());
 return TRUE;
 }

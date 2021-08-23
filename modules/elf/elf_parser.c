@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with exview2.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with exview2. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #include <config.h>
@@ -27,13 +27,6 @@ void ev_parser_iface_init(EvParserIface* iface);
  *
  */
 
-struct _EvElfParser
-{
-  GObject parent_instance;
-
-  /*<private>*/
-};
-
 G_DEFINE_TYPE_WITH_CODE
 (EvElfParser,
  ev_elf_parser,
@@ -42,15 +35,50 @@ G_DEFINE_TYPE_WITH_CODE
  (EV_TYPE_PARSER,
   ev_parser_iface_init));
 
-static
-gboolean ev_parser_iface_parse(EvParser* pself, EvViewContext* view_ctx, GInputStream* stream, GCancellable* cancellable, GError** error) {
-  g_set_error
-  (error,
-   EV_PARSER_ERROR,
-   EV_PARSER_ERROR_UNPARSEABLE,
-   "unsupported\r\n");
-  g_print((*error)->message);
-return FALSE;
+static gboolean
+ev_parser_iface_parse(EvParser* pself,
+                      EvViewContext* view_ctx,
+                      GInputStream* stream,
+                      GCancellable* cancellable,
+                      GError** error)
+{
+  EvElfParser* self = EV_ELF_PARSER(pself);
+  gboolean success = TRUE;
+  GError* tmp_err = NULL;
+
+  char ident[4] = {0};
+  guchar bitlen = 0;
+
+  get_s(ident, sizeof(ident));
+  if G_UNLIKELY(!memcmp(ident, "\x7f" "ELF", sizeof(ident)))
+  {
+    get_s(&bitlen, 1);
+    goto_if_failed(bitlen == 1 || bitlen == 2);
+
+    switch(bitlen)
+    {
+    case elf_bitlen_32:
+      get_a(header32, sizeof(elf_header32_t), 0, G_SEEK_SET);
+      goto_if_failed(header32->e_shnum > header32->e_shstrndx || header32->e_shnum == 0);
+      break;
+    case elf_bitlen_64:
+      get_a(header64, sizeof(elf_header64_t), 0, G_SEEK_SET);
+      goto_if_failed(header64->e_shnum > header64->e_shstrndx || header64->e_shnum == 0);
+      break;
+    }
+  }
+  else
+  {
+    g_set_error
+    (error,
+     EV_PARSER_ERROR,
+     EV_PARSER_ERROR_UNPARSEABLE,
+     "invalid ELF header\r\n");
+    goto_error();
+  }
+
+error_tag()
+return success;
 }
 
 static
