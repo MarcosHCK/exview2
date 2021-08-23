@@ -42,6 +42,8 @@ INCLUDE_PATH=\
 #
 
 EXTRA_DIST+=\
+	elf_parser.h \
+	elf_structs.h \
 	$(VOID)
 
 #
@@ -51,7 +53,14 @@ EXTRA_DIST+=\
 noinst_LTLIBRARIES=libelf_module.la
 
 libelf_module_la_SOURCES=\
+	elf_parse_dyninfo.c \
+	elf_parse_header.c \
+	elf_parse_phents.c \
+	elf_parse_shents.c \
+	elf_parse_symbols.c \
 	elf_parser.c \
+	elf_strings.c \
+	elf_utils.c \
 	$(VOID)
 
 libelf_module_la_CFLAGS=\

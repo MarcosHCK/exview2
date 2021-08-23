@@ -17,8 +17,6 @@
  */
 #include <config.h>
 #include <elf_parser.h>
-#include <ev2_parser.h>
-#include <ev2_view_context.h>
 
 static
 void ev_parser_iface_init(EvParserIface* iface);
@@ -35,6 +33,17 @@ G_DEFINE_TYPE_WITH_CODE
  G_IMPLEMENT_INTERFACE
  (EV_TYPE_PARSER,
   ev_parser_iface_init));
+
+#define parse_call(func, ...) \
+G_STMT_START { \
+  success = \
+  (func) (__VA_ARGS__, &tmp_err); \
+  if(success == FALSE) \
+  { \
+    g_propagate_error(error, tmp_err); \
+    goto_error(); \
+  } \
+} G_STMT_END
 
 static gboolean
 ev_parser_iface_parse(EvParser* pself,
@@ -67,6 +76,12 @@ ev_parser_iface_parse(EvParser* pself,
       goto_if_failed(header64->e_shnum > header64->e_shstrndx || header64->e_shnum == 0);
       break;
     }
+
+    parse_call( _elf_parser_parse_header, self, view_ctx, stream, cancellable);
+    parse_call( _elf_parser_parse_phents, self, view_ctx, stream, cancellable);
+    parse_call( _elf_parser_parse_shents, self, view_ctx, stream, cancellable);
+    parse_call(_elf_parser_parse_dyninfo, self, view_ctx, stream, cancellable);
+    parse_call(_elf_parser_parse_symbols, self, view_ctx, stream, cancellable);
   }
   else
   {

@@ -17,9 +17,10 @@
  */
 #ifndef __ELF_PARSER_INCLUDED__
 #define __ELF_PARSER_INCLUDED__ 1
-#include <ev2_macros.h>
 #include <elf_structs.h>
-#include <glib-object.h>
+#include <ev2_macros.h>
+#include <ev2_parser.h>
+#include <ev2_view_context.h>
 
 #define EV_TYPE_ELF_PARSER            (ev_elf_parser_get_type())
 #define EV_ELF_PARSER(object)         (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ELF_PARSER, EvElfParser))
@@ -56,6 +57,98 @@ struct _EvElfParserClass
 {
   GObjectClass parent_class;
 };
+
+/*
+ * Parsers
+ *
+ */
+/*<private>*/
+gboolean
+_elf_parser_parse_header(EvElfParser* pself,
+                         EvViewContext* view_ctx,
+                         GInputStream* stream,
+                         GCancellable* cancellable,
+                         GError** error);
+gboolean
+_elf_parser_parse_phents(EvElfParser* pself,
+                         EvViewContext* view_ctx,
+                         GInputStream* stream,
+                         GCancellable* cancellable,
+                         GError** error);
+gboolean
+_elf_parser_parse_shents(EvElfParser* pself,
+                         EvViewContext* view_ctx,
+                         GInputStream* stream,
+                         GCancellable* cancellable,
+                         GError** error);
+gboolean
+_elf_parser_parse_dyninfo(EvElfParser* self,
+                          EvViewContext* view_ctx,
+                          GInputStream* stream,
+                          GCancellable* cancellable,
+                          GError** error);
+gboolean
+_elf_parser_parse_symbols(EvElfParser* self,
+                          EvViewContext* view_ctx,
+                          GInputStream* stream,
+                          GCancellable* cancellable,
+                          GError** error);
+
+/*
+ * Human-readable conversion functions
+ *
+ */
+/*<private>*/
+const gchar*
+_s_elfabi(elf_abi_t abi);
+const gchar*
+_s_elftype(elf_type_t abi);
+const gchar*
+_s_elfmach(elf_machine_t type);
+const gchar*
+_s_elfphtype(elf_phtype_t type);
+const gchar*
+_s_elfshtype(elf_shtype_t type);
+const gchar*
+_s_elfsbind(elf_bind_type_t type);
+const gchar*
+_s_elfstype(elf_sym_type_t type);
+const gchar*
+_s_elfsvis(elf_sym_vis_t type);
+const gchar*
+_s_elfdynt(elf_dyn_type_t type);
+
+/*
+ * Utilities
+ *
+ */
+/*<private>*/
+gboolean
+_elf_parser_get_segment_entry(EvElfParser* self,
+                              guint32 idx,
+                              elf_phent64_t* ent,
+                              GInputStream* stream,
+                              GCancellable* cancellable,
+                              GError** error);
+gboolean
+_elf_parser_get_section_entry(EvElfParser* self,
+                              guint32 idx,
+                              elf_shent64_t* ent,
+                              GInputStream* stream,
+                              GCancellable* cancellable,
+                              GError** error);
+gchar*
+_elf_parser_get_string(EvElfParser* self,
+                       guint32 sh_name,
+                       GInputStream* stream,
+                       GCancellable* cancellable,
+                       GError** error);
+goffset
+_elf_parser_translate_addr(EvElfParser* self,
+                           vaddr_t addr,
+                           GInputStream* stream,
+                           GCancellable* cancellable,
+                           GError** error);
 
 #if __cplusplus
 }
