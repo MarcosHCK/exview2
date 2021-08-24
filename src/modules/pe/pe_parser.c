@@ -45,6 +45,36 @@ G_STMT_START { \
   } \
 } G_STMT_END
 
+static gchar*
+dumphex(gconstpointer buffer_,
+        gsize size)
+{
+  static const gint bytes_per_line = 16;
+  static const gchar* chars = "0123456789abcdef";
+  guchar c, *buffer = (guchar*) buffer_;
+
+  GString* string =
+  g_string_sized_new((size * 3) + (2 * (size / bytes_per_line)));
+
+  do
+  {
+    gsize i, take = MIN(bytes_per_line, size);
+    size -= take;
+
+    for(i = 0;i < take;i++, buffer++)
+    {
+      c = *buffer;
+      g_string_append_c(string, chars[(c >> 4) & 0xf]);
+      g_string_append_c(string, chars[       c & 0xf]);
+      g_string_append_c(string, ' ');
+    }
+
+    g_string_append(string, "\r\n");
+  }
+  while(size > 0);
+return g_string_free(string, FALSE);
+}
+
 static gboolean
 ev_parser_iface_parse(EvParser* pself,
                       EvViewContext* view_ctx,
@@ -60,20 +90,31 @@ ev_parser_iface_parse(EvParser* pself,
   get_s(mz, sizeof(mz));
   if G_UNLIKELY(!memcmp(mz, "MZ", sizeof(mz)))
   {
-    get_s(&(self->dos), sizeof(pe_dos_header_t)-sizeof(mz));
-    memcpy(&(self->dos), mz, sizeof(mz));
+    get_a(&(self->dos), sizeof(pe_dos_header_t), 0, G_SEEK_SET);
 
     pe_sign_t sign;
     get_a(&sign, sizeof(sign), self->dos.e_lfanew, G_SEEK_SET);
-    if G_UNLIKELY(!memcmp(&sign, "PE", sizeof(sign.Magic)))
+    if G_UNLIKELY(!memcmp(&(sign.Magic), "PE", sizeof(sign.Magic)))
     {
       get_s(&(self->pe.header), sizeof(self->pe.header));
       memcpy(&(self->pe.sign), &sign, sizeof(sign));
 
       if G_LIKELY(self->pe.header.SizeOfOptionalHeader > 0)
+      {
         get_s(&(self->opt), self->pe.header.SizeOfOptionalHeader);
+        if(self->opt._32.Magic == 0x10b)
+          self->pe.header.Characteristics |= pe_flag_32bit_machine;
+      }
+
+      self->sections = g_seekable_tell(G_SEEKABLE(stream));
+      self->bitlen = (self->pe.header.Characteristics & pe_flag_32bit_machine) ? pe_bitlen_32 : pe_bitlen_64;
 
       parse_call(_pe_parser_parse_dos_header, self, view_ctx, stream, cancellable);
+      parse_call( _pe_parser_parse_pe_header, self, view_ctx, stream, cancellable);
+      parse_call(_pe_parser_parse_opt_header, self, view_ctx, stream, cancellable);
+      parse_call(  _pe_parser_parse_sections, self, view_ctx, stream, cancellable);
+      parse_call(   _pe_parser_parse_imports, self, view_ctx, stream, cancellable);
+      parse_call(   _pe_parser_parse_exports, self, view_ctx, stream, cancellable);
     }
     else
     {

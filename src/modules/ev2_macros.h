@@ -32,6 +32,11 @@ G_STMT_START { \
   success = FALSE; \
   goto _error_; \
 } G_STMT_END
+#define goto_success() \
+G_STMT_START { \
+  success = TRUE; \
+  goto _error_; \
+} G_STMT_END
 
 #define goto_if_failed(expr) \
 G_STMT_START { \

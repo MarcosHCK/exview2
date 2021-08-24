@@ -53,8 +53,13 @@ EXTRA_DIST+=\
 noinst_LTLIBRARIES=libpe_module.la
 
 libpe_module_la_SOURCES=\
+	pe_parse_exports.c \
 	pe_parse_headers.c \
+	pe_parse_imports.c \
+	pe_parse_sections.c \
 	pe_parser.c \
+	pe_strings.c \
+	pe_utils.c \
 	$(VOID)
 
 libpe_module_la_CFLAGS=\

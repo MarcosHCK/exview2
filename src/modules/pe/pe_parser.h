@@ -44,6 +44,7 @@ struct _EvPeParser
   GObject parent_instance;
 
   /*<private>*/
+  pe_bitlen_t bitlen;
   pe_dos_header_t dos;
   pe_header_t pe;
   union
@@ -52,7 +53,7 @@ struct _EvPeParser
     pe_optional_header64_t _64;
   } opt;
 
-  pe_section_header_t* sects;
+  goffset sections;
 };
 
 
@@ -72,18 +73,79 @@ _pe_parser_parse_dos_header(EvPeParser* self,
                             GInputStream* stream,
                             GCancellable* cancellable,
                             GError** error);
+gboolean
+_pe_parser_parse_pe_header(EvPeParser* self,
+                           EvViewContext* view_ctx,
+                           GInputStream* stream,
+                           GCancellable* cancellable,
+                           GError** error);
+gboolean
+_pe_parser_parse_opt_header(EvPeParser* self,
+                            EvViewContext* view_ctx,
+                            GInputStream* stream,
+                            GCancellable* cancellable,
+                            GError** error);
+gboolean
+_pe_parser_parse_sections(EvPeParser* self,
+                          EvViewContext* view_ctx,
+                          GInputStream* stream,
+                          GCancellable* cancellable,
+                          GError** error);
+gboolean
+_pe_parser_parse_imports(EvPeParser* self,
+                         EvViewContext* view_ctx,
+                         GInputStream* stream,
+                         GCancellable* cancellable,
+                         GError** error);
+gboolean
+_pe_parser_parse_exports(EvPeParser* self,
+                         EvViewContext* view_ctx,
+                         GInputStream* stream,
+                         GCancellable* cancellable,
+                         GError** error);
 
 /*
  * Human-readable conversion functions
  *
  */
 /*<private>*/
+const gchar* _s_pever(uint16_t optmagic);
+const gchar* _s_pearch(pe_arch_t arch);
+const gchar* _s_petimestamp(uint32_t timestamp);
+gchar* _s_pechars(pe_flag_t characteristics);
+const gchar* _s_pesubsystem(pe_subsystem_t subsystem);
+gchar* _s_pedllchars(pe_dllflags_t flags);
+const gchar* _s_peddirname(int n);
+const gchar* _s_pesectchars(pe_section_flags_t characteristics);
+const gchar* _s_peresid(pe_resource_id_t id);
+gchar* _s_pefileveros(pe_filever_os_t type);
+const gchar* _s_pefilevertype(pe_filever_type_t type);
 
 /*
  * Utilities
  *
  */
 /*<private>*/
+pe_section_header_t*
+_pe_parser_get_section_by_vaddr(EvPeParser* self,
+                                vaddr_t vaddr,
+                                GInputStream* stream,
+                                GCancellable* cancellable,
+                                GError** error);
+goffset
+_pe_parser_translate_vaddr(EvPeParser* self,
+                           vaddr_t vaddr,
+                           GInputStream* stream,
+                           GCancellable* cancellable,
+                           GError** error);
+gchar*
+_pe_parser_load_string(EvPeParser* self,
+                       goffset at_,
+                       gssize size_,
+                       gsize* psize,
+                       GInputStream* stream,
+                       GCancellable* cancellable,
+                       GError** error);
 
 #if __cplusplus
 }
