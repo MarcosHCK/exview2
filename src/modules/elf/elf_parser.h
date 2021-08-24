@@ -32,6 +32,26 @@
 typedef struct _EvElfParser      EvElfParser;
 typedef struct _EvElfParserClass EvElfParserClass;
 
+#define header32 ((elf_header32_t*)&(self->header32_))
+#define header64 ((elf_header64_t*)&(self->header64_))
+
+#define take_var(preffix, as, varname, where, T) \
+G_STMT_START { \
+  switch(header32->bitlen) \
+  { \
+  case elf_bitlen_32: \
+    *((where)) = (T)\
+    preffix##32 as varname; \
+    break; \
+  case elf_bitlen_64: \
+    *((where)) = (T)\
+    preffix##64 as varname; \
+    break; \
+  } \
+} G_STMT_END
+#define take_var_p(preffix, varname, where, T) take_var(preffix, ->, varname, where, T)
+#define take_var_s(preffix, varname, where, T) take_var(preffix, ., varname, where, T)
+
 #if __cplusplus
 extern "C" {
 #endif // __cplusplus

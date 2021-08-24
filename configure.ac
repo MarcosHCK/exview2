@@ -159,6 +159,7 @@ settings/Makefile
 vapi/Makefile
 src/modules/Makefile
 src/modules/elf/Makefile
+src/modules/pe/Makefile
 src/resources/Makefile
 src/application/Makefile
 src/application/org.hck.exview2.desktop.in

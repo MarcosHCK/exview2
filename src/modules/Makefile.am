@@ -19,4 +19,5 @@ EXTRA_DIST=\
 	ev2_macros.h
 
 SUBDIRS=\
-	elf
+	elf \
+	pe

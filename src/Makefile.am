@@ -101,6 +101,7 @@ exview2_LDFLAGS=\
 
 exview2_LDADD=\
 	modules/elf/libelf_module.la \
+	modules/pe/libpe_module.la \
 	resources/libbundle.la \
 	$(VOID)
 

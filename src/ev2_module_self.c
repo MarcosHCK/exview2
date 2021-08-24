@@ -24,6 +24,8 @@
  */
 GType
 ev_elf_parser_get_type();
+GType
+ev_pe_parser_get_type();
 
 G_MODULE_EXPORT
 gboolean EV_MODULE_INIT_FUNCTION (EvModule       *module,
@@ -51,5 +53,6 @@ gboolean EV_MODULE_INIT_FUNCTION (EvModule       *module,
   g_bytes_unref(snippet);
 
   ev_module_add_parser(module, ev_elf_parser_get_type());
+  ev_module_add_parser(module, ev_pe_parser_get_type());
 return TRUE;
 }
