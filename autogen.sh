@@ -26,4 +26,5 @@ test -z "$srcdir" && srcdir=.
 ORIGDIR=`pwd`
 cd $srcdir
 
+autopoint
 autoreconf -i -f

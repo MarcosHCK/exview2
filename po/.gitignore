@@ -23,7 +23,6 @@
 
 Makefile.in
 Makefile.in.in
-Makevars
 POTFILES
 Rules-quot
 exview2.pot

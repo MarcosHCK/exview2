@@ -45,6 +45,11 @@ Makefile.in
 /missing
 
 #
+# gettext
+#
+ABOUT-NLS
+
+#
 # automake stamps
 #
 stamp-*
