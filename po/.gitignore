@@ -27,3 +27,5 @@ Makevars
 POTFILES
 Rules-quot
 exview2.pot
+
+.intltool-merge-cache
