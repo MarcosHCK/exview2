@@ -3,5 +3,5 @@ src/resources/ui/message.ui
 src/resources/ui/prefblock.ui
 src/resources/ui/preferences.ui
 src/resources/ui/window.ui
-src/ev2_message.c
-src/ev2_window.c
+src/ev2_message.vala
+src/ev2_window.vala

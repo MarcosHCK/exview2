@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exview2 0.1.0.0\n"
 "Report-Msgid-Bugs-To: exview2.bugs@hcktm.com\n"
-"POT-Creation-Date: 2021-08-23 13:40-0400\n"
+"POT-Creation-Date: 2021-08-23 20:01-0400\n"
 "PO-Revision-Date: 2021-08-23 13:42-0400\n"
 "Last-Translator: Marcos marcoshck16@gmail.com\n"
 "Language-Team: Spanish - Spain <exview2_es@hcktm.org>\n"
@@ -43,40 +43,40 @@ msgstr "Sobre Exview2"
 msgid "column"
 msgstr "columna"
 
-#: src/ev2_message.c:132
+#: src/ev2_message.vala:42
 msgid "No"
 msgstr "No"
 
-#: src/ev2_message.c:132
+#: src/ev2_message.vala:43
 msgid "Yes"
 msgstr "Si"
 
-#: src/ev2_message.c:155 src/ev2_message.c:178 src/ev2_message.c:201
-#: src/ev2_message.c:240
+#: src/ev2_message.vala:55 src/ev2_message.vala:67 src/ev2_message.vala:79
+#: src/ev2_message.vala:91
 msgid "OK"
 msgstr "OK"
 
-#: src/ev2_window.c:213
+#: src/ev2_window.vala:40
 msgid "Open an executable ..."
 msgstr "Abrir archivo ..."
 
-#: src/ev2_window.c:213
+#: src/ev2_window.vala:43
 msgid "Ok"
 msgstr "OK"
 
-#: src/ev2_window.c:213
+#: src/ev2_window.vala:44
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/ev2_window.c:509
+#: src/ev2_window.vala:162
 #, c-format
 msgid "About %s"
 msgstr "Sobre %s"
 
-#: src/ev2_window.c:528
+#: src/ev2_window.vala:171
 msgid "translator-credits"
 msgstr "MarcosHCK"
 
-#: src/ev2_window.c:534
+#: src/ev2_window.vala:174
 msgid "Visit our website"
 msgstr "Visita nuestro sitio web"
