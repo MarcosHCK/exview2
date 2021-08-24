@@ -51,15 +51,15 @@ G_STMT_START { \
 G_STMT_START { \
   gsize read = 0; \
   gsize expected = (c); \
-  g_clear_error(&tmp_err); \
+  GError* tmp_err = NULL; \
   success = \
   g_input_stream_read_all(stream, (b), expected, &read, cancellable, &tmp_err); \
-  if(success == FALSE) \
+  if G_UNLIKELY(tmp_err != NULL) \
   { \
     g_propagate_error(error, tmp_err); \
     goto_error(); \
   } \
-  if(read != expected) \
+  if G_UNLIKELY(read != expected) \
   { \
     g_set_error(error, \
                 G_IO_ERROR, \
@@ -71,10 +71,10 @@ G_STMT_START { \
 } G_STMT_END
 #define seek_a(o, t) \
 G_STMT_START { \
-  g_clear_error(&tmp_err); \
+  GError* tmp_err = NULL; \
   success = \
   g_seekable_seek(G_SEEKABLE(stream), (o), (t), cancellable, &tmp_err); \
-  if(success == FALSE) \
+  if G_UNLIKELY(tmp_err != NULL) \
   { \
     g_propagate_error(error, tmp_err); \
     goto_error(); \

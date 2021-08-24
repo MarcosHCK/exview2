@@ -291,7 +291,7 @@ ev_module_set_snippet(EvModule* module,
 
 static
 gboolean g_type_compare(GType* g_type1, GType* g_type2) {
-return (*g_type1) == (*g_type2);
+return (*g_type1) != (*g_type2);
 }
 
 void
@@ -299,7 +299,7 @@ ev_module_add_parser(EvModule* module,
                      GType g_type)
 {
   g_return_if_fail(EV_IS_MODULE(module));
-  g_return_if_fail(g_type_is_a(g_type, G_TYPE_OBJECT));
+  g_return_if_fail(g_type_is_a(g_type, EV_TYPE_PARSER));
 
   if G_LIKELY
   (g_array_binary_search
